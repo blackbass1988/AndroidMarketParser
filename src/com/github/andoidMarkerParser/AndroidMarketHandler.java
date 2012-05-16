@@ -129,11 +129,13 @@ public class AndroidMarketHandler {
         if (categoryElement != null && categoryElement.hasText()) {
             category = categoryElement.html();
         }
+        String currency = priceElement.attr("data-docCurrencyCode");
+
         Double price = (priceElement.attr("data-isFree").equals("true")) ? 0.0 : new Double(priceElement.attr("data-docPriceMicros")) / 1000000;
 
 
         //TODO: name into base64
-        return new AndroidApplication(name, image, packageName, description, category, price);
+        return new AndroidApplication(name, image, packageName, description, category, currency, price);
     }
 
     /**

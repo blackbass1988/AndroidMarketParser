@@ -31,6 +31,7 @@ public class Main {
             System.out.println("description: " + app.getDescription());
             System.out.println("category: " + app.getCategory());
             System.out.println("detailSrc: " + app.getDetailsUrl());
+            System.out.println("currency: " + app.getCurrency());
             System.out.println("price: " + app.getPrice());
         }
         System.out.println("Total finded: " + returnData.size());
