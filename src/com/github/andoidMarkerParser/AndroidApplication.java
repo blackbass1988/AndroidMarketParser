@@ -140,7 +140,7 @@ public class AndroidApplication {
         return this.price;
     }
 
-    String getCurrency() {
+    public String getCurrency() {
         return this.currency;
     }
 }
