@@ -116,7 +116,7 @@ public class AndroidMarketHandler {
         Element packageNameElement = item;
         Element descriptionElement = item.select(".description").first();
         Element categoryElement = item.select("span.category a").first();
-        Element priceElement = item.select("div.buy-border a").first();
+        Element priceElement = item.select("div.buy-border a span.buy-offer").first();
 
         String name = nameElement.attr("title");
         String image = imgElement.attr("src");
