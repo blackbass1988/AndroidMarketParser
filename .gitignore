@@ -1,1 +1,6 @@
 *.class
+.iml
+.ipr
+.idea/*
+.idea
+.jar
