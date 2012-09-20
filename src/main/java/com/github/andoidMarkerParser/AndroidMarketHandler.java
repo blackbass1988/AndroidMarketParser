@@ -4,15 +4,14 @@
  */
 package com.github.andoidMarkerParser;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles action with Android Market
@@ -82,7 +81,7 @@ public class AndroidMarketHandler {
     /**
      * Method returns HTML after market.android/search request
      *
-     * @param String request thing to search in Android market
+     * @param request String thing to search in Android market
      * @return
      */
     private static Elements makeRequest(String request) {
@@ -133,7 +132,7 @@ public class AndroidMarketHandler {
     /**
      * add iterations application List
      *
-     * @param list
+     * @param items list
      */
     private static List getApplications(Elements items) {
         List<AndroidApplication> applications = new ArrayList<AndroidApplication>();
