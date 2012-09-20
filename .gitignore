@@ -4,3 +4,7 @@
 .idea/*
 .idea
 .jar
+lib/*
+dist/*
+build/*
+nbproject/*
