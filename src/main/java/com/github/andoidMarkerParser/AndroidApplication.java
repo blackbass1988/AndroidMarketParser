@@ -13,6 +13,7 @@ public class AndroidApplication {
 
     private String name, image, packageName, description, detailsUrl, category, currency;
     private Double price;
+    private String fileSixeBytes;
 
     /**
      *
@@ -25,7 +26,8 @@ public class AndroidApplication {
      * @param name
      * @param image
      */
-    public AndroidApplication(String name, String image, String packageName, String description, String category, String currency, Double price) {
+    public AndroidApplication(String name, String image, String packageName, 
+            String description, String category, String currency, Double price, String fileSixeBytes) {
         this.image = image;
         this.name = name;
         this.packageName = packageName;
@@ -34,6 +36,7 @@ public class AndroidApplication {
         this.category = category;
         this.currency = currency;
         this.price = price;
+        this.fileSixeBytes = fileSixeBytes;
     }
 
     /**
@@ -142,5 +145,9 @@ public class AndroidApplication {
 
     public String getCurrency() {
         return this.currency;
+    }
+
+    public String getFileSixeBytes() {
+        return fileSixeBytes;
     }
 }

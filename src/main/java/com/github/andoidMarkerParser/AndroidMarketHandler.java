@@ -157,11 +157,14 @@ public class AndroidMarketHandler {
             Element descriptionElement = item.select("div#doc-original-text").first();
             Element categoryElement = item.select("dd a").first();
             Element priceElement = item.select("div.buy-border a span.buy-offer").first();
+            Element fileSizeElement = item.select("div.doc-metadata dd").get(6); // @TODO get <dd itemprop="fileSize">24M</dd> by itemprop
             Element packageNameElement = priceElement;
 
             String name = nameElement.html();
             String image = imgElement.attr("src");
             String packageName = packageNameElement.attr("data-docid");
+            String fileSize = fileSizeElement.html();
+            
             String description = "";
             if (descriptionElement != null && descriptionElement.hasText()) {
                 description = descriptionElement.html();
@@ -174,7 +177,7 @@ public class AndroidMarketHandler {
 
             Double price = (priceElement.attr("data-isFree").equals("true")) ? 0.0 : new Double(priceElement.attr("data-docPriceMicros")) / 1000000;
 
-            return new AndroidApplication(name, image, packageName, description, category, currency, price);
+            return new AndroidApplication(name, image, packageName, description, category, currency, price, fileSize);
 
         }else{
             Element imgElement = item.select("img").first();
@@ -201,7 +204,7 @@ public class AndroidMarketHandler {
 
 
             //TODO: name into base64
-            return new AndroidApplication(name, image, packageName, description, category, currency, price);
+            return new AndroidApplication(name, image, packageName, description, category, currency, price, "unknown");
         }
     }
 
