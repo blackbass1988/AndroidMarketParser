@@ -11,16 +11,18 @@ public class AndroidApplication {
     private Double price;
     private Long fileBytes;
 
-    /**
-     *
-     */
-    public AndroidApplication() {
-    }
+    private AndroidApplication() {}
 
     /**
      *
-     * @param name
-     * @param image
+     * @param name example: foo
+     * @param image example: http://some.foo.com/icon.png
+     * @param packageName example: org.github.android.parser
+     * @param description example: bla-bla-bla-bla
+     * @param category example: games
+     * @param currency example: USD
+     * @param price example: 1
+     * @param fileBytes example 1024
      */
     public AndroidApplication(String name, String image, String packageName, 
             String description, String category, String currency, Double price, Long fileBytes) {
@@ -37,55 +39,7 @@ public class AndroidApplication {
 
     /**
      *
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     *
-     * @param image
-     */
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    /**
-     *
-     * @param packageName
-     */
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    /**
-     *
-     * @param description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     *
-     * @param category
-     */
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    /**
-     *
-     * @param price
-     */
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    /**
-     *
-     * @return
+     * @return image url of application from Google Play
      */
     public String getImage() {
         return this.image;
@@ -93,7 +47,7 @@ public class AndroidApplication {
 
     /**
      *
-     * @return
+     * @return package name of applcation from Google Play
      */
     public String getPackageName() {
         return this.packageName;
@@ -101,7 +55,7 @@ public class AndroidApplication {
 
     /**
      *
-     * @return
+     * @return name of application from Google Play
      */
     public String getName() {
         return this.name;
@@ -109,7 +63,7 @@ public class AndroidApplication {
 
     /**
      *
-     * @return
+     * @return description from Google Play
      */
     public String getDescription() {
         return this.description;
@@ -117,7 +71,7 @@ public class AndroidApplication {
 
     /**
      *
-     * @return
+     * @return category string
      */
     public String getCategory() {
         return this.category;
@@ -125,7 +79,7 @@ public class AndroidApplication {
 
     /**
      *
-     * @return
+     * @return detailsURL string
      */
     public String getDetailsUrl() {
         return this.detailsUrl;
@@ -133,16 +87,24 @@ public class AndroidApplication {
 
     /**
      *
-     * @return
+     * @return price Double
      */
     public Double getPrice() {
         return this.price;
     }
 
+    /**
+     *
+     * @return currency code String
+     */
     public String getCurrency() {
         return this.currency;
     }
 
+    /**
+     *
+     * @return count of bytes of application on store in Long
+     */
     public Long getFileBytes() {
         return fileBytes;
     }

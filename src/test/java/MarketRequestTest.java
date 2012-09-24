@@ -46,4 +46,31 @@ public class MarketRequestTest {
 
 
     }
+
+
+    @Test
+    public void badRequest(){
+        String request = "pname:net.cachapa.libra31231231231231231";
+        List<AndroidApplication> returnData = AndroidMarketHandler.marketSearch(request);
+
+        assertNotNull(returnData);
+        assertTrue(returnData.isEmpty());
+
+    }
+
+    @Test
+    public void requestWithoutSize(){
+        String request = "pname:net.cachapa.libra";
+        List<AndroidApplication> returnData = AndroidMarketHandler.marketSearch(request);
+
+        assertNotNull(returnData);
+        assertFalse(returnData.isEmpty());
+        assertEquals(returnData.size(), 1);
+
+        AndroidApplication app = returnData.get(0);
+        assertNotNull(app);
+
+        assertTrue(app.getFileBytes().equals(0l));
+
+    }
 }

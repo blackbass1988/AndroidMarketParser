@@ -45,7 +45,7 @@ public class AndroidMarketHandler {
      * @param request search request
      * @param searchType search type
      * [SEARCH_TYPE_PACKAGE_NAME,SEARCH_TYPE_PUBLISHER_NAME]
-     * @return
+     * @return list of AndroidApplication
      */
     public static List<AndroidApplication> marketSearch(String request, String searchType) {
         request = searchType + request;
@@ -60,23 +60,24 @@ public class AndroidMarketHandler {
     /**
      * public static methods for private makeRequest
      *
-     * @param request
-     * @return
+     * @param request String of request to Android Play
+     * @return list of AndroidApplication
      */
     public static List<AndroidApplication> marketSearch(String request) {
         Elements applications;
+
         if (request.contains("pname:")){
             applications = makeDetailsRequest(request);
         }else{
             applications = makeRequest(request);
         }
         if (applications == null) {
-            return null;
+            return new ArrayList<AndroidApplication>();
         }
         if (applications.size() > 0) {
             return getApplications(applications);
         } else {
-            return null;
+            return new ArrayList<AndroidApplication>();
         }
     }
 
@@ -84,7 +85,7 @@ public class AndroidMarketHandler {
      * Method returns HTML after market.android/search request
      *
      * @param request String thing to search in Android market
-     * @return
+     * @return Elements after request to Android Play
      */
     private static Elements makeRequest(String request) {
         try {
@@ -99,10 +100,9 @@ public class AndroidMarketHandler {
                     .ignoreHttpErrors(IGNORE_HTTP_ERRORS)
                     .followRedirects(FOLLOW_REDIRECTS)
                     .userAgent(USER_AGENT).get();
-            Elements items = doc.select(SEARCH_RESULT_SECTION)
+            return doc.select(SEARCH_RESULT_SECTION)
                     .select(SEARCH_RESULT_LIST)
                     .select(SEARCH_ITEMS_SELECTOR);
-            return items;
         } catch (IOException e) {
             System.out.println("makeRequest exception; " + e.toString());
             e.printStackTrace();
@@ -110,6 +110,11 @@ public class AndroidMarketHandler {
         }
     }
 
+    /**
+     *
+     * @param request string request
+     * @return Elements
+     */
     private static Elements makeDetailsRequest(String request) {
         try{
             request = request.replace(" ", "%20");
@@ -121,8 +126,7 @@ public class AndroidMarketHandler {
                     .ignoreHttpErrors(IGNORE_HTTP_ERRORS)
                     .followRedirects(FOLLOW_REDIRECTS)
                     .userAgent(USER_AGENT).get();
-            Elements item = doc.select(DETAILS_PAGE_CONTENT);
-            return item;
+            return doc.select(DETAILS_PAGE_CONTENT);
         } catch (IOException e){
             System.out.println("makeDetailsRequest exception; " + e.toString());
             e.printStackTrace();
@@ -136,7 +140,7 @@ public class AndroidMarketHandler {
      *
      * @param items list
      */
-    private static List getApplications(Elements items) {
+    private static List<AndroidApplication> getApplications(Elements items) {
         List<AndroidApplication> applications = new ArrayList<AndroidApplication>();
         for (Element item : items) {
             applications.add(parseApplication(item));
@@ -147,7 +151,7 @@ public class AndroidMarketHandler {
     /**
      * Parse application for image caption, title
      *
-     * @param item
+     * @param item Jsoup Element; item of application
      */
     private static AndroidApplication parseApplication(Element item) {
 
@@ -160,8 +164,6 @@ public class AndroidMarketHandler {
             Element categoryElement = item.select("dd a").first();
             Element priceElement = item.select("div.buy-border a span.buy-offer").first();
             Element fileSizeElement = item.select("dl.doc-metadata-list dd[itemprop=fileSize]").first();
-
-             // @TODO get <dd itemprop="fileSize">24M</dd> by itemprop
 
             String name = nameElement.html();
             String image = imgElement.attr("src");
@@ -210,6 +212,11 @@ public class AndroidMarketHandler {
         }
     }
 
+    /**
+     * returns filesize from String html of dl.doc-metadata-list dd[itemprop=fileSize]
+     * @param html of filesize tag. Example: 25M, 100K
+     * @return Long of bytes
+     */
     private static Long getFileSizeFromAndroidMarketString(String html) {
         Pattern pattern = Pattern.compile("(\\d+)(\\D+)");
         Matcher matcher = pattern.matcher(html);
@@ -222,6 +229,12 @@ public class AndroidMarketHandler {
 
     }
 
+    /**
+     * Calculates bytes from size and measure
+     * @param size example: 100
+     * @param measure: example M/B/K/G
+     * @return Long of filesize
+     */
     private static Long calculateSize(Long size, String measure) {
         Long targetSize = 0l;
         if (measure.equalsIgnoreCase("b")) {
@@ -239,8 +252,8 @@ public class AndroidMarketHandler {
     /**
      * return locale url param for market request
      *
-     * @param locale
-     * @return
+     * @param locale example: en
+     * @return request &param=value string
      */
     private static String getLocaleUrl(String locale) {
         return "&hl=" + locale;
