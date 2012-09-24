@@ -12,6 +12,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Handles action with Android Market
@@ -157,13 +159,14 @@ public class AndroidMarketHandler {
             Element descriptionElement = item.select("div#doc-original-text").first();
             Element categoryElement = item.select("dd a").first();
             Element priceElement = item.select("div.buy-border a span.buy-offer").first();
-            Element fileSizeElement = item.select("div.doc-metadata dd").get(6); // @TODO get <dd itemprop="fileSize">24M</dd> by itemprop
-            Element packageNameElement = priceElement;
+            Element fileSizeElement = item.select("dl.doc-metadata-list dd[itemprop=fileSize]").first();
+
+             // @TODO get <dd itemprop="fileSize">24M</dd> by itemprop
 
             String name = nameElement.html();
             String image = imgElement.attr("src");
-            String packageName = packageNameElement.attr("data-docid");
-            String fileSize = fileSizeElement.html();
+            String packageName = priceElement.attr("data-docid");
+            Long fileSize = getFileSizeFromAndroidMarketString(fileSizeElement.html());
             
             String description = "";
             if (descriptionElement != null && descriptionElement.hasText()) {
@@ -182,14 +185,13 @@ public class AndroidMarketHandler {
         }else{
             Element imgElement = item.select("img").first();
             Element nameElement = item.select("a.title").first();
-            Element packageNameElement = item;
             Element descriptionElement = item.select(".description").first();
             Element categoryElement = item.select("span.category a").first();
             Element priceElement = item.select("div.buy-border a span.buy-offer").first();
 
             String name = nameElement.attr("title");
             String image = imgElement.attr("src");
-            String packageName = packageNameElement.attr("data-docid");
+            String packageName = item.attr("data-docid");
             String description = "";
             if (descriptionElement != null && descriptionElement.hasText()) {
                 description = descriptionElement.html();
@@ -204,8 +206,34 @@ public class AndroidMarketHandler {
 
 
             //TODO: name into base64
-            return new AndroidApplication(name, image, packageName, description, category, currency, price, "unknown");
+            return new AndroidApplication(name, image, packageName, description, category, currency, price, 0l);
         }
+    }
+
+    private static Long getFileSizeFromAndroidMarketString(String html) {
+        Pattern pattern = Pattern.compile("(\\d+)(\\D+)");
+        Matcher matcher = pattern.matcher(html);
+        if (matcher.find()){
+            Long size = Long.valueOf(matcher.group(1));
+            String measure = matcher.group(2);
+            return calculateSize(size, measure);
+        }
+        return 0l;
+
+    }
+
+    private static Long calculateSize(Long size, String measure) {
+        Long targetSize = 0l;
+        if (measure.equalsIgnoreCase("b")) {
+            targetSize = size;
+        } else if (measure.equalsIgnoreCase("k")) {
+            targetSize = size * 1024;
+        } else if (measure.equalsIgnoreCase("m")) {
+            targetSize = size * 1048576; // 1024 * 1024;
+        } else if (measure.equalsIgnoreCase("g")) {
+            targetSize = size * 1073741824;  //1024 * 1024 * 1024;
+        }
+        return targetSize;
     }
 
     /**
