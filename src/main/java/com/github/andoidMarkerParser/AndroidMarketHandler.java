@@ -169,7 +169,7 @@ public class AndroidMarketHandler {
             String image = imgElement.attr("src");
             String packageName = priceElement.attr("data-docid");
             Long fileSize = getFileSizeFromAndroidMarketString(fileSizeElement.html());
-            
+
             String description = "";
             if (descriptionElement != null && descriptionElement.hasText()) {
                 description = descriptionElement.html();
@@ -218,15 +218,15 @@ public class AndroidMarketHandler {
      * @return Long of bytes
      */
     private static Long getFileSizeFromAndroidMarketString(String html) {
-        Pattern pattern = Pattern.compile("(\\d+)(\\D+)");
+        Pattern pattern = Pattern.compile("^([^a-zA-Z]+)(\\D+)$");
         Matcher matcher = pattern.matcher(html);
         if (matcher.find()){
-            Long size = Long.valueOf(matcher.group(1));
+
+            Double size = Double.valueOf(matcher.group(1));
             String measure = matcher.group(2);
             return calculateSize(size, measure);
         }
         return 0l;
-
     }
 
     /**
@@ -235,16 +235,16 @@ public class AndroidMarketHandler {
      * @param measure: example M/B/K/G
      * @return Long of filesize
      */
-    private static Long calculateSize(Long size, String measure) {
+    private static Long calculateSize(Double size, String measure) {
         Long targetSize = 0l;
         if (measure.equalsIgnoreCase("b")) {
-            targetSize = size;
+            targetSize = size.longValue();
         } else if (measure.equalsIgnoreCase("k")) {
-            targetSize = size * 1024;
+            targetSize = (long)(size * 1024);
         } else if (measure.equalsIgnoreCase("m")) {
-            targetSize = size * 1048576; // 1024 * 1024;
+            targetSize = (long)(size * 1048576); // 1024 * 1024;
         } else if (measure.equalsIgnoreCase("g")) {
-            targetSize = size * 1073741824;  //1024 * 1024 * 1024;
+            targetSize = (long)(size * 1073741824);  //1024 * 1024 * 1024;
         }
         return targetSize;
     }

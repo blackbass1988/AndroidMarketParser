@@ -79,7 +79,7 @@ public class AndroidApplication {
 
     /**
      *
-     * @return detailsURL string
+     * @return detailsURL string, example: https://play.google.com/store/apps/details?id=foo.bar.com
      */
     public String getDetailsUrl() {
         return this.detailsUrl;

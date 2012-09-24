@@ -45,6 +45,16 @@ public class MarketRequestTest {
         assertTrue(app.getFileBytes().equals(51200l));
 
 
+        request = "pname:mobi.firedepartment";
+        returnData = AndroidMarketHandler.marketSearch(request);
+        assertNotNull(returnData);
+        assertFalse(returnData.isEmpty());
+        assertEquals(returnData.size(), 1);
+
+        app = returnData.get(0);
+        assertNotNull(app);
+        assertTrue(app.getFileBytes().equals(2831155l));
+
     }
 
 
