@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.github.andoidMarkerParser;
 
 /**
@@ -11,8 +7,9 @@ package com.github.andoidMarkerParser;
  */
 public class AndroidApplication {
 
-    private String name, image, packageName, description, detailsUrl, category, currency, fileSixeBytes;
+    private String name, image, packageName, description, detailsUrl, category, currency;
     private Double price;
+    private Long fileBytes;
 
     /**
      *
@@ -26,7 +23,7 @@ public class AndroidApplication {
      * @param image
      */
     public AndroidApplication(String name, String image, String packageName, 
-            String description, String category, String currency, Double price, String fileSixeBytes) {
+            String description, String category, String currency, Double price, Long fileBytes) {
         this.image = image;
         this.name = name;
         this.packageName = packageName;
@@ -35,7 +32,7 @@ public class AndroidApplication {
         this.category = category;
         this.currency = currency;
         this.price = price;
-        this.fileSixeBytes = fileSixeBytes;
+        this.fileBytes = fileBytes;
     }
 
     /**
@@ -146,7 +143,8 @@ public class AndroidApplication {
         return this.currency;
     }
 
-    public String getFileSixeBytes() {
-        return fileSixeBytes;
+    public Long getFileBytes() {
+        return fileBytes;
     }
+
 }

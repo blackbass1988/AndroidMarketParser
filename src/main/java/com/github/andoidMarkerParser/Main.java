@@ -33,7 +33,7 @@ public class Main {
             System.out.println("detailSrc: " + app.getDetailsUrl());
             System.out.println("currency: " + app.getCurrency());
             System.out.println("price: " + app.getPrice());
-            System.out.println("fileSize: " + app.getFileSixeBytes());
+            System.out.println("fileSize: " + app.getFileBytes());
         }
         System.out.println("Total finded: " + returnData.size());
     }
