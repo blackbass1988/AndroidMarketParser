@@ -1,9 +1,9 @@
 *.class
-.iml
-.ipr
+*.iml
+*.ipr
 .idea/*
 .idea
-.jar
+*.jar
 lib/*
 dist/*
 build/*

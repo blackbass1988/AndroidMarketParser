@@ -11,9 +11,8 @@ package com.github.andoidMarkerParser;
  */
 public class AndroidApplication {
 
-    private String name, image, packageName, description, detailsUrl, category, currency;
+    private String name, image, packageName, description, detailsUrl, category, currency, fileSixeBytes;
     private Double price;
-    private String fileSixeBytes;
 
     /**
      *
