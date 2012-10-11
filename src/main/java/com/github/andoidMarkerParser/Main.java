@@ -34,7 +34,7 @@ public class Main {
             System.out.println("currency: " + app.getCurrency());
             System.out.println("price: " + app.getPrice());
             System.out.println("fileSize: " + app.getFileBytes());
-            System.out.println("minAndroidVersion" + app.getMinAndroidVersion());
+            System.out.println("minAndroidVersion: " + app.getMinAndroidVersion());
         }
         System.out.println("Total finded: " + returnData.size());
     }
