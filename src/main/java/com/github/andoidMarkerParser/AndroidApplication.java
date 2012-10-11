@@ -7,25 +7,26 @@ package com.github.andoidMarkerParser;
  */
 public class AndroidApplication {
 
-    private String name, image, packageName, description, detailsUrl, category, currency;
+    private String name, image, packageName, description, detailsUrl, category, currency, minAndroidVersion;
     private Double price;
     private Long fileBytes;
 
-    private AndroidApplication() {}
+    private AndroidApplication() {
+    }
 
     /**
-     *
-     * @param name example: foo
-     * @param image example: http://some.foo.com/icon.png
+     * @param name        example: foo
+     * @param image       example: http://some.foo.com/icon.png
      * @param packageName example: org.github.android.parser
      * @param description example: bla-bla-bla-bla
-     * @param category example: games
-     * @param currency example: USD
-     * @param price example: 1
-     * @param fileBytes example 1024
+     * @param category    example: games
+     * @param currency    example: USD
+     * @param price       example: 1
+     * @param fileBytes   example 1024
      */
-    public AndroidApplication(String name, String image, String packageName, 
-            String description, String category, String currency, Double price, Long fileBytes) {
+    public AndroidApplication(String name, String image, String packageName,
+                              String description, String category, String currency, Double price, Long fileBytes,
+                              String minAnddroidVersion) {
         this.image = image;
         this.name = name;
         this.packageName = packageName;
@@ -35,10 +36,10 @@ public class AndroidApplication {
         this.currency = currency;
         this.price = price;
         this.fileBytes = fileBytes;
+        this.minAndroidVersion = minAnddroidVersion;
     }
 
     /**
-     *
      * @return image url of application from Google Play
      */
     public String getImage() {
@@ -46,7 +47,6 @@ public class AndroidApplication {
     }
 
     /**
-     *
      * @return package name of applcation from Google Play
      */
     public String getPackageName() {
@@ -54,7 +54,6 @@ public class AndroidApplication {
     }
 
     /**
-     *
      * @return name of application from Google Play
      */
     public String getName() {
@@ -62,7 +61,6 @@ public class AndroidApplication {
     }
 
     /**
-     *
      * @return description from Google Play
      */
     public String getDescription() {
@@ -70,7 +68,6 @@ public class AndroidApplication {
     }
 
     /**
-     *
      * @return category string
      */
     public String getCategory() {
@@ -78,7 +75,6 @@ public class AndroidApplication {
     }
 
     /**
-     *
      * @return detailsURL string, example: https://play.google.com/store/apps/details?id=foo.bar.com
      */
     public String getDetailsUrl() {
@@ -86,7 +82,6 @@ public class AndroidApplication {
     }
 
     /**
-     *
      * @return price Double
      */
     public Double getPrice() {
@@ -94,7 +89,6 @@ public class AndroidApplication {
     }
 
     /**
-     *
      * @return currency code String
      */
     public String getCurrency() {
@@ -102,11 +96,18 @@ public class AndroidApplication {
     }
 
     /**
-     *
      * @return count of bytes of application on store in Long
      */
     public Long getFileBytes() {
         return fileBytes;
+    }
+
+    /**
+     *
+     * @return string of android version that needed on device
+     */
+    public String getMinAndroidVersion() {
+        return this.minAndroidVersion;
     }
 
 }

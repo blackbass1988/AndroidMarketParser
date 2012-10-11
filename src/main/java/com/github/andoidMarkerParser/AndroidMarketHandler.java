@@ -42,9 +42,9 @@ public class AndroidMarketHandler {
     /**
      * public static methods for private makeRequest
      *
-     * @param request search request
+     * @param request    search request
      * @param searchType search type
-     * [SEARCH_TYPE_PACKAGE_NAME,SEARCH_TYPE_PUBLISHER_NAME]
+     *                   [SEARCH_TYPE_PACKAGE_NAME,SEARCH_TYPE_PUBLISHER_NAME]
      * @return list of AndroidApplication
      */
     public static List<AndroidApplication> marketSearch(String request, String searchType) {
@@ -66,9 +66,9 @@ public class AndroidMarketHandler {
     public static List<AndroidApplication> marketSearch(String request) {
         Elements applications;
 
-        if (request.contains("pname:")){
+        if (request.contains("pname:")) {
             applications = makeDetailsRequest(request);
-        }else{
+        } else {
             applications = makeRequest(request);
         }
         if (applications == null) {
@@ -101,8 +101,8 @@ public class AndroidMarketHandler {
                     .followRedirects(FOLLOW_REDIRECTS)
                     .userAgent(USER_AGENT).get();
             return doc.select(SEARCH_RESULT_SECTION)
-                    .select(SEARCH_RESULT_LIST)
-                    .select(SEARCH_ITEMS_SELECTOR);
+                      .select(SEARCH_RESULT_LIST)
+                      .select(SEARCH_ITEMS_SELECTOR);
         } catch (IOException e) {
             System.out.println("makeRequest exception; " + e.toString());
             e.printStackTrace();
@@ -111,12 +111,11 @@ public class AndroidMarketHandler {
     }
 
     /**
-     *
      * @param request string request
      * @return Elements
      */
     private static Elements makeDetailsRequest(String request) {
-        try{
+        try {
             request = request.replace(" ", "%20");
             request = request.replace("pname:", "");
             request = MARKET_URL_DETAILS_PAGE + request + getLocaleUrl(MARKET_EN_LOCALE);
@@ -127,7 +126,7 @@ public class AndroidMarketHandler {
                     .followRedirects(FOLLOW_REDIRECTS)
                     .userAgent(USER_AGENT).get();
             return doc.select(DETAILS_PAGE_CONTENT);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("makeDetailsRequest exception; " + e.toString());
             e.printStackTrace();
             return null;
@@ -155,20 +154,24 @@ public class AndroidMarketHandler {
      */
     private static AndroidApplication parseApplication(Element item) {
 
-        if (item.attr("class").equalsIgnoreCase("page-content")){
+        if (item.attr("class").equalsIgnoreCase("page-content")) {
             //is details
+
+            Element docMetaDataList = item.select("dl.doc-metadata-list").first();
 
             Element imgElement = item.select("div.doc-banner-icon img").first();
             Element nameElement = item.select(".doc-banner-title").first();
             Element descriptionElement = item.select("div#doc-original-text").first();
             Element categoryElement = item.select("dd a").first();
             Element priceElement = item.select("div.buy-border a span.buy-offer").first();
-            Element fileSizeElement = item.select("dl.doc-metadata-list dd[itemprop=fileSize]").first();
+            Element fileSizeElement = docMetaDataList.select("dd[itemprop=fileSize]").first();
+            Element minVersionElement = docMetaDataList.select("dt[itemprop=operatingSystems]").first().nextElementSibling();
 
             String name = nameElement.html();
             String image = imgElement.attr("src");
             String packageName = priceElement.attr("data-docid");
             Long fileSize = getFileSizeFromAndroidMarketString(fileSizeElement.html());
+            String minOSVersion = getMinVersionFromHtmlString(minVersionElement.html());
 
             String description = "";
             if (descriptionElement != null && descriptionElement.hasText()) {
@@ -182,9 +185,9 @@ public class AndroidMarketHandler {
 
             Double price = (priceElement.attr("data-isFree").equals("true")) ? 0.0 : new Double(priceElement.attr("data-docPriceMicros")) / 1000000;
 
-            return new AndroidApplication(name, image, packageName, description, category, currency, price, fileSize);
-
-        }else{
+            return new AndroidApplication(name, image, packageName, description, category, currency, price, fileSize,
+                                          minOSVersion);
+        } else {
             Element imgElement = item.select("img").first();
             Element nameElement = item.select("a.title").first();
             Element descriptionElement = item.select(".description").first();
@@ -206,21 +209,34 @@ public class AndroidMarketHandler {
 
             Double price = (priceElement.attr("data-isFree").equals("true")) ? 0.0 : new Double(priceElement.attr("data-docPriceMicros")) / 1000000;
 
+            return new AndroidApplication(name, image, packageName, description, category, currency, price, 0l, null);
+        }
+    }
 
-            //TODO: name into base64
-            return new AndroidApplication(name, image, packageName, description, category, currency, price, 0l);
+    /**
+     * @param html example: 2.2 and up
+     * @return String of version: 2.2
+     */
+    private static String getMinVersionFromHtmlString(String html) {
+        Pattern pattern = Pattern.compile("(\\d|\\.)+");
+        Matcher matcher = pattern.matcher(html);
+        if (matcher.find()) {
+            return matcher.group(0);
+        } else {
+            return null;
         }
     }
 
     /**
      * returns filesize from String html of dl.doc-metadata-list dd[itemprop=fileSize]
+     *
      * @param html of filesize tag. Example: 25M, 100K
      * @return Long of bytes
      */
     private static Long getFileSizeFromAndroidMarketString(String html) {
         Pattern pattern = Pattern.compile("^([^a-zA-Z]+)(\\D+)$");
         Matcher matcher = pattern.matcher(html);
-        if (matcher.find()){
+        if (matcher.find()) {
 
             Double size = Double.valueOf(matcher.group(1));
             String measure = matcher.group(2);
@@ -231,7 +247,8 @@ public class AndroidMarketHandler {
 
     /**
      * Calculates bytes from size and measure
-     * @param size example: 100
+     *
+     * @param size     example: 100
      * @param measure: example M/B/K/G
      * @return Long of filesize
      */
@@ -240,11 +257,11 @@ public class AndroidMarketHandler {
         if (measure.equalsIgnoreCase("b")) {
             targetSize = size.longValue();
         } else if (measure.equalsIgnoreCase("k")) {
-            targetSize = (long)(size * 1024);
+            targetSize = (long) (size * 1024);
         } else if (measure.equalsIgnoreCase("m")) {
-            targetSize = (long)(size * 1048576); // 1024 * 1024;
+            targetSize = (long) (size * 1048576); // 1024 * 1024;
         } else if (measure.equalsIgnoreCase("g")) {
-            targetSize = (long)(size * 1073741824);  //1024 * 1024 * 1024;
+            targetSize = (long) (size * 1073741824);  //1024 * 1024 * 1024;
         }
         return targetSize;
     }

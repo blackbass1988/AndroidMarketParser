@@ -12,7 +12,7 @@ import static junit.framework.Assert.*;
 public class MarketRequestTest {
 
     @Test
-    public void getRequest(){
+    public void getRequest() {
         String request = "pname:com.fullfat.android.agentdash";
         List<AndroidApplication> returnData = AndroidMarketHandler.marketSearch(request);
         assertNotNull(returnData);
@@ -20,7 +20,7 @@ public class MarketRequestTest {
     }
 
     @Test
-    public void getSize(){
+    public void getSize() {
         String request = "pname:com.fullfat.android.agentdash";
         List<AndroidApplication> returnData = AndroidMarketHandler.marketSearch(request);
 
@@ -59,7 +59,7 @@ public class MarketRequestTest {
 
 
     @Test
-    public void badRequest(){
+    public void badRequest() {
         String request = "pname:net.cachapa.libra31231231231231231";
         List<AndroidApplication> returnData = AndroidMarketHandler.marketSearch(request);
 
@@ -69,7 +69,7 @@ public class MarketRequestTest {
     }
 
     @Test
-    public void requestWithoutSize(){
+    public void requestWithoutSize() {
         String request = "pname:net.cachapa.libra";
         List<AndroidApplication> returnData = AndroidMarketHandler.marketSearch(request);
 
@@ -81,6 +81,30 @@ public class MarketRequestTest {
         assertNotNull(app);
 
         assertTrue(app.getFileBytes().equals(0l));
+    }
+
+    @Test
+    public void parserTest() {
+        String request = "pname:ru.yulagroup.book";
+
+        List<AndroidApplication> returnData = AndroidMarketHandler.marketSearch(request);
+
+        assertNotNull(returnData);
+        assertFalse(returnData.isEmpty());
+        assertEquals(returnData.size(), 1);
+
+        AndroidApplication app = returnData.get(0);
+        assertNotNull(app);
+
+        assertEquals(app.getPackageName(), "ru.yulagroup.book");
+        assertNotNull(app.getFileBytes());
+        assertNotNull(app.getCategory());
+        assertNotNull(app.getCurrency());
+        assertNotNull(app.getDescription());
+        assertNotNull(app.getDetailsUrl());
+        assertNotNull(app.getImage());
+        assertNotNull(app.getMinAndroidVersion());
+        assertEquals(app.getMinAndroidVersion(), "2.2");
 
     }
 }
