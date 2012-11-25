@@ -110,4 +110,12 @@ public class AndroidApplication {
         return this.minAndroidVersion;
     }
 
+    public String toString() {
+        return String.format("{\"name\": \"%s\", \"image\": \"%s\", \"packageName\": \"%s\", " +
+                "\"description\": \"%s\", \"detailsUrl\": \"%s\", \"category\": \"%s\", \"currency\": \"%s\"," +
+                "\"minAndroidVersion\": \"%s\", \"price\": \"%s\", \"fileBytes\": \"%s\"}",
+                name, image, packageName, description, detailsUrl, category, currency, minAndroidVersion, price,
+                fileBytes);
+    }
+
 }

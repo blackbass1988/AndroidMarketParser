@@ -237,8 +237,7 @@ public class AndroidMarketHandler {
         Pattern pattern = Pattern.compile("^([^a-zA-Z]+)(\\D+)$");
         Matcher matcher = pattern.matcher(html);
         if (matcher.find()) {
-
-            Double size = Double.valueOf(matcher.group(1));
+            Double size = Double.valueOf(matcher.group(1).replaceAll(",", "."));
             String measure = matcher.group(2);
             return calculateSize(size, measure);
         }
