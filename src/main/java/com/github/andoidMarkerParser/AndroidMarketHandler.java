@@ -22,21 +22,32 @@ import java.util.regex.Pattern;
  */
 public class AndroidMarketHandler {
 
-    public static final String SEARCH_TYPE_PACKAGE_NAME = "pname:";
-    public static final String SEARCH_TYPE_PUBLISHER_NAME = "pub:";
     public static final String MARKET_URL_SEARCH_PAGE = "https://play.google.com/store/search";
     public static final String MARKET_URL_DETAILS_PAGE = "https://play.google.com/store/apps/details?id=";
     private static final String MARKET_EN_LOCALE = "en";
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:10.0.2) Gecko/20100101 Firefox/10.0.2";
     private static final String SEARCH_RESULT_SECTION = "div.results-section-set";
-    private static final String SEARCH_RESULT_LIST = "ul.search-results-list";
-    private static final String SEARCH_ITEMS_SELECTOR = "li";
+
     private static final int TIMEOUT = 10000;
     private static final boolean IGNORE_HTTP_ERRORS = true;
     private static final boolean FOLLOW_REDIRECTS = true;
 
-    private static final String DETAILS_IMAGE_ELEMENT = "doc-banner-icon img";
     private static final String DETAILS_PAGE_CONTENT = "div.page-content";
+    private static final String SEARCH_NUM_PAGINATION_LIST = "div.num-pagination-page";
+    private static final String SEARCH_UL = "ul";
+    private static final String SEARCH_LI = "li";
+
+
+    @Deprecated
+    private static final String SEARCH_RESULT_LIST = "ul.search-results-list";
+    @Deprecated
+    private static final String SEARCH_ITEMS_SELECTOR = "li";
+    @Deprecated
+    private static final String DETAILS_IMAGE_ELEMENT = "doc-banner-icon img";
+    @Deprecated
+    private static final String SEARCH_TYPE_PACKAGE_NAME = "pname:";
+    @Deprecated
+    private static final String SEARCH_TYPE_PUBLISHER_NAME = "pub:";
 
 
     /**
@@ -89,7 +100,7 @@ public class AndroidMarketHandler {
      */
     private static Elements makeRequest(String request) {
         try {
-            request = request.replace(" ", "%20");
+            request = request.replace(" ", "+");
             request = MARKET_URL_SEARCH_PAGE + "?q=" + request + "&c=apps"
                     + getLocaleUrl(MARKET_EN_LOCALE);
             Document doc;
@@ -101,8 +112,9 @@ public class AndroidMarketHandler {
                     .followRedirects(FOLLOW_REDIRECTS)
                     .userAgent(USER_AGENT).get();
             return doc.select(SEARCH_RESULT_SECTION)
-                      .select(SEARCH_RESULT_LIST)
-                      .select(SEARCH_ITEMS_SELECTOR);
+                      .select(SEARCH_NUM_PAGINATION_LIST)
+                      .select(SEARCH_UL)
+                      .select(SEARCH_LI);
         } catch (IOException e) {
             System.out.println("makeRequest exception; " + e.toString());
             e.printStackTrace();

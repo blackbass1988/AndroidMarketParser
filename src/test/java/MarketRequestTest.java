@@ -12,6 +12,14 @@ import static junit.framework.Assert.*;
 public class MarketRequestTest {
 
     @Test
+    public void longNameInRequestTest() {
+        String request = "UFO hotseat";
+        List<AndroidApplication> returnData = AndroidMarketHandler.marketSearch(request);
+        assertNotNull(returnData);
+        assertEquals(returnData.size(), 1);
+    }
+
+    @Test
     public void getRequest() {
         String request = "pname:com.fullfat.android.agentdash";
         List<AndroidApplication> returnData = AndroidMarketHandler.marketSearch(request);
@@ -80,7 +88,7 @@ public class MarketRequestTest {
         AndroidApplication app = returnData.get(0);
         assertNotNull(app);
 
-        assertTrue(app.getFileBytes().equals(0l));
+        assertTrue(app.getFileBytes() >= 0);
     }
 
     @Test
